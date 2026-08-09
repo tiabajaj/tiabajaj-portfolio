@@ -1,0 +1,324 @@
+:root {
+    --bg: #06070a;
+    --bg-soft: #0b1020;
+    --text: #f5f0e6;
+    --muted: #bfc5d6;
+    --blue: #7eb7ff;
+    --blue-soft: #9dc7ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    margin: 0;
+    min-height: 100%;
+    background: radial-gradient(1200px 500px at 50% -100px, #121a33 0%, var(--bg) 60%);
+    color: var(--text);
+}
+
+body {
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+.page {
+    overflow-x: hidden;
+}
+
+.hero {
+    position: relative;
+    min-height: 86vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 5.5rem 1.25rem 3.5rem;
+}
+
+.starfield,
+.starfield::before,
+.starfield::after {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.starfield {
+    background:
+        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.5) 0 1px, transparent 1px 100%),
+        radial-gradient(circle at 80% 15%, rgba(167, 205, 255, 0.45) 0 1px, transparent 1px 100%),
+        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.42) 0 1px, transparent 1px 100%);
+    background-size: 220px 220px, 260px 260px, 300px 300px;
+    animation: drift 38s linear infinite;
+}
+
+.starfield::before,
+.starfield::after {
+    content: "";
+    background:
+        radial-gradient(circle at 10% 30%, rgba(255, 255, 255, 0.26) 0 1px, transparent 1px 100%),
+        radial-gradient(circle at 60% 60%, rgba(161, 196, 255, 0.26) 0 1px, transparent 1px 100%);
+    background-size: 280px 280px, 330px 330px;
+}
+
+.starfield::before {
+    animation: drift 60s linear infinite reverse;
+}
+
+.starfield::after {
+    animation: drift 85s linear infinite;
+}
+
+.drone-wrap {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.drone {
+    position: absolute;
+    width: 74px;
+    top: 18%;
+    left: -10%;
+    animation: droneFlight 13s linear infinite;
+}
+
+.drone-wrap.reduced .drone {
+    left: 78%;
+    top: 14%;
+    animation: none;
+}
+
+.drone-glow {
+    fill: var(--blue);
+    opacity: 0.25;
+    filter: blur(4px);
+}
+
+.drone-line,
+.drone-prop {
+    stroke: #d5e9ff;
+    stroke-width: 1.6;
+    fill: none;
+}
+
+.drone-body {
+    fill: #e9f4ff;
+    opacity: 0.92;
+}
+
+.drone-pulse {
+    fill: var(--blue-soft);
+    transform-origin: center;
+    animation: pulse 1.2s ease-in-out infinite;
+}
+
+.hero-inner {
+    z-index: 2;
+    width: min(900px, 100%);
+}
+
+.hero-name {
+    margin: 0;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: clamp(2.9rem, 9vw, 6rem);
+    letter-spacing: 0.01em;
+    text-shadow: 0 0 30px rgba(126, 183, 255, 0.25);
+    background: linear-gradient(95deg, #f5f0e6 36%, #ffffff 49%, #a7cfff 53%, #f5f0e6 60%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: titleSweep 7s linear infinite;
+}
+
+.role-line {
+    margin: 1rem auto 0;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 3.5vw, 1.9rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+.mission-button {
+    display: inline-block;
+    margin-top: 1.6rem;
+    padding: 0.8rem 1.4rem;
+    border-radius: 999px;
+    border: 1px solid rgba(158, 197, 255, 0.45);
+    color: #f4f8ff;
+    text-decoration: none;
+    font-weight: 600;
+    background: rgba(34, 60, 104, 0.18);
+    box-shadow: 0 0 24px rgba(126, 183, 255, 0.2);
+}
+
+.content {
+    width: min(1050px, 92vw);
+    margin: 0 auto;
+    padding: 0 0 1rem;
+}
+
+.philosophy {
+    margin: 0 auto 2.2rem;
+    max-width: 760px;
+    text-align: center;
+    color: #e0d9cb;
+    line-height: 1.7;
+    font-size: clamp(1rem, 1.65vw, 1.15rem);
+}
+
+.capabilities h2 {
+    margin: 0 0 0.7rem;
+    text-align: center;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+}
+
+.capabilities ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 720px;
+    text-align: center;
+    color: var(--muted);
+    display: grid;
+    gap: 0.6rem;
+}
+
+.mission-work {
+    padding: 4.2rem 0 5.5rem;
+}
+
+.mission-work h2 {
+    margin: 0 0 1.8rem;
+    text-align: center;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-size: clamp(2rem, 4.7vw, 3.3rem);
+}
+
+.carousel-window {
+    width: min(1120px, 100vw);
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 0 10vw;
+    cursor: grab;
+}
+
+.carousel-window:active {
+    cursor: grabbing;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 850ms cubic-bezier(0.19, 0.84, 0.33, 1);
+    will-change: transform;
+}
+
+.mission-card {
+    position: relative;
+    flex: 0 0 min(68vw, 290px);
+    height: min(72vh, 430px);
+    border-radius: 26px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
+    background: #0e1628;
+}
+
+.mission-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-overlay {
+    position: absolute;
+    inset: auto 0 0;
+    padding: 1rem 1rem 1.1rem;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.72) 55%, rgba(0, 0, 0, 0.88) 100%);
+}
+
+.card-overlay h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1.15rem;
+}
+
+.card-overlay p {
+    margin: 0.24rem 0;
+    color: #d5d9e5;
+    font-size: 0.85rem;
+}
+
+@keyframes drift {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-220px);
+    }
+}
+
+@keyframes titleSweep {
+    0%,
+    35% {
+        background-position: -170% 50%;
+    }
+    74%,
+    100% {
+        background-position: 170% 50%;
+    }
+}
+
+@keyframes droneFlight {
+    0% {
+        transform: translateX(0) translateY(0) rotate(-3deg);
+    }
+    25% {
+        transform: translateX(35vw) translateY(-8px) rotate(2deg);
+    }
+    60% {
+        transform: translateX(75vw) translateY(6px) rotate(-1deg);
+    }
+    100% {
+        transform: translateX(115vw) translateY(0) rotate(2deg);
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.3);
+    }
+}
+
+@media (max-width: 900px) {
+    .carousel-window {
+        padding: 0 7vw;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}
