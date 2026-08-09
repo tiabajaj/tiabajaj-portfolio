@@ -16,16 +16,109 @@ body,
 #root {
     margin: 0;
     min-height: 100%;
-    background: radial-gradient(1200px 500px at 50% -100px, #121a33 0%, var(--bg) 60%);
+    background: var(--bg);
     color: var(--text);
 }
 
 body {
+    position: relative;
     font-family: "Inter", system-ui, sans-serif;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(420px 300px at 15% 22%, rgba(126, 183, 255, 0.12), transparent 70%),
+        radial-gradient(600px 380px at 55% 82%, rgba(30, 50, 100, 0.3), transparent 70%);
+    filter: blur(10px);
+    animation: ambientDrift 26s ease-in-out infinite;
+}
+
+@keyframes ambientDrift {
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(2%, -2%) scale(1.05);
+    }
+}
+
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#root {
+    position: relative;
+    z-index: 1;
 }
 
 .page {
     overflow-x: hidden;
+}
+
+.nav {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem clamp(1.25rem, 4vw, 3rem);
+}
+
+.nav-name {
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+}
+
+.nav-menu span {
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.nav-menu:hover span {
+    background: var(--blue-soft);
+}
+
+.nav-menu:hover span:first-child {
+    transform: translateY(1px);
+}
+
+.nav-menu:hover span:last-child {
+    transform: translateY(-1px);
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+}
+
+.nav-menu span {
+    display: block;
+    height: 1px;
+    width: 100%;
+    background: var(--text);
 }
 
 .hero {
@@ -71,65 +164,44 @@ body {
     animation: drift 85s linear infinite;
 }
 
-.drone-wrap {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.drone {
-    position: absolute;
-    width: 74px;
-    top: 18%;
-    left: -10%;
-    animation: droneFlight 13s linear infinite;
-}
-
-.drone-wrap.reduced .drone {
-    left: 78%;
-    top: 14%;
-    animation: none;
-}
-
-.drone-glow {
-    fill: var(--blue);
-    opacity: 0.25;
-    filter: blur(4px);
-}
-
-.drone-line,
-.drone-prop {
-    stroke: #d5e9ff;
-    stroke-width: 1.6;
-    fill: none;
-}
-
-.drone-body {
-    fill: #e9f4ff;
-    opacity: 0.92;
-}
-
-.drone-pulse {
-    fill: var(--blue-soft);
-    transform-origin: center;
-    animation: pulse 1.2s ease-in-out infinite;
-}
-
 .hero-inner {
+    position: relative;
     z-index: 2;
     width: min(900px, 100%);
+}
+
+.hero-marker {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-bottom: 1.1rem;
+    border-radius: 50%;
+    background: #fffdf7;
+    box-shadow: 0 0 16px 2px rgba(255, 253, 247, 0.5);
+    animation: markerPulse 3.4s ease-in-out infinite;
+}
+
+@keyframes markerPulse {
+    0%,
+    100% {
+        opacity: 0.75;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.35);
+    }
 }
 
 .hero-name {
     margin: 0;
     font-family: "Bodoni Moda", serif;
-    font-style: italic;
-    font-weight: 600;
-    font-size: clamp(2.9rem, 9vw, 6rem);
+    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(2.4rem, 7vw, 78px);
     letter-spacing: 0.01em;
     text-shadow: 0 0 30px rgba(126, 183, 255, 0.25);
-    background: linear-gradient(95deg, #f5f0e6 36%, #ffffff 49%, #a7cfff 53%, #f5f0e6 60%);
+    background: linear-gradient(95deg, #fffdf7 36%, #ffffff 49%, #a7cfff 53%, #fffdf7 60%);
     background-size: 240% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -137,16 +209,31 @@ body {
     animation: titleSweep 7s linear infinite;
 }
 
-.role-line {
-    margin: 1rem auto 0;
-    height: 2.5rem;
-    line-height: 2.5rem;
-    font-family: "Bodoni Moda", serif;
+.hero-name-lead {
+    font-style: normal;
+    font-weight: 400;
+}
+
+.hero-name-emph {
     font-style: italic;
-    font-size: clamp(1.1rem, 3.5vw, 1.9rem);
-    letter-spacing: 0.08em;
+    font-weight: 500;
+}
+
+.role-line {
+    margin: 0.4rem auto 0;
+    width: 100%;
+    max-width: 100%;
+    min-height: 1.1em;
+    line-height: 1.1;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    font-family: "Bodoni Moda", serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: clamp(1.5rem, 4.6vw, 3.4rem);
+    letter-spacing: 0.01em;
     text-transform: uppercase;
-    color: var(--text);
+    color: #fffdf7;
 }
 
 .mission-button {
@@ -160,6 +247,52 @@ body {
     font-weight: 600;
     background: rgba(34, 60, 104, 0.18);
     box-shadow: 0 0 24px rgba(126, 183, 255, 0.2);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, background 0.35s ease;
+}
+
+.mission-button:hover {
+    transform: translateY(-3px);
+    background: rgba(34, 60, 104, 0.32);
+    box-shadow: 0 4px 32px rgba(126, 183, 255, 0.35);
+}
+
+.tools-marquee {
+    position: relative;
+    z-index: 2;
+    margin: 3.5rem auto 0;
+    width: min(720px, 100vw);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+}
+
+.tools-marquee-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    gap: 2.75rem;
+    padding-right: 2.75rem;
+    animation: marquee 20s linear infinite;
+}
+
+.tools-marquee-item {
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    opacity: 0.8;
+    white-space: nowrap;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
 }
 
 .content {
@@ -172,40 +305,48 @@ body {
     margin: 0 auto 2.2rem;
     max-width: 760px;
     text-align: center;
-    color: #e0d9cb;
-    line-height: 1.7;
-    font-size: clamp(1rem, 1.65vw, 1.15rem);
+    text-wrap: balance;
+    color: #f4f1eb;
+    font-family: "Inter", system-ui, sans-serif;
+    font-weight: 400;
+    letter-spacing: 0em;
+    line-height: 1.25em;
+    font-size: clamp(1.35rem, 3vw, 30px);
 }
 
-.capabilities h2 {
-    margin: 0 0 0.7rem;
+.projects-intro {
+    width: min(1050px, 92vw);
+    margin: 0 auto;
+    padding: 3rem 0 1rem;
+    text-align: center;
+}
+
+.projects-intro h2,
+.mission-work h2,
+.cta h2 {
+    margin: 0;
     text-align: center;
     font-family: "Bodoni Moda", serif;
     font-style: italic;
-    font-size: clamp(1.75rem, 3.6vw, 2.5rem);
+    font-weight: 500;
+    font-size: clamp(2rem, 4.7vw, 3.3rem);
 }
 
-.capabilities ul {
-    list-style: none;
-    padding: 0;
-    margin: 0 auto;
-    max-width: 720px;
+.section-subtitle {
+    margin: 0.6rem auto 0;
+    max-width: 520px;
     text-align: center;
     color: var(--muted);
-    display: grid;
-    gap: 0.6rem;
+    font-size: clamp(0.95rem, 1.5vw, 1.05rem);
 }
 
 .mission-work {
-    padding: 4.2rem 0 5.5rem;
+    padding: 2.5rem 0 5.5rem;
+    text-align: center;
 }
 
-.mission-work h2 {
-    margin: 0 0 1.8rem;
-    text-align: center;
-    font-family: "Bodoni Moda", serif;
-    font-style: italic;
-    font-size: clamp(2rem, 4.7vw, 3.3rem);
+.mission-work .carousel-window {
+    margin-top: 2.6rem;
 }
 
 .carousel-window {
@@ -236,12 +377,24 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.16);
     box-shadow: 0 20px 36px rgba(0, 0, 0, 0.35);
     background: #0e1628;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease, border-color 0.5s ease;
+}
+
+.mission-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(158, 197, 255, 0.5);
+    box-shadow: 0 28px 48px rgba(0, 0, 0, 0.45), 0 0 32px rgba(126, 183, 255, 0.18);
 }
 
 .mission-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mission-card:hover img {
+    transform: scale(1.06);
 }
 
 .card-overlay {
@@ -252,14 +405,53 @@ body {
 }
 
 .card-overlay h3 {
-    margin: 0 0 0.45rem;
-    font-size: 1.15rem;
+    margin: 0.2rem 0 0.4rem;
+    font-family: "Bodoni Moda", serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 1.15;
 }
 
 .card-overlay p {
     margin: 0.24rem 0;
     color: #d5d9e5;
     font-size: 0.85rem;
+}
+
+.card-category {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.7rem !important;
+    color: var(--blue-soft) !important;
+    font-weight: 600;
+}
+
+.card-focus {
+    color: var(--muted) !important;
+}
+
+.cta {
+    width: min(900px, 92vw);
+    margin: 0 auto 5rem;
+    padding: 3.5rem clamp(1.5rem, 5vw, 3.5rem);
+    border-radius: 28px;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(18, 26, 51, 0.6), rgba(6, 7, 10, 0.9));
+    border: 1px solid rgba(158, 197, 255, 0.18);
+}
+
+.cta-sparkle {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--blue-soft);
+    font-size: 1.2rem;
+}
+
+.cta h2 {
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.15;
 }
 
 @keyframes drift {
@@ -279,33 +471,6 @@ body {
     74%,
     100% {
         background-position: 170% 50%;
-    }
-}
-
-@keyframes droneFlight {
-    0% {
-        transform: translateX(0) translateY(0) rotate(-3deg);
-    }
-    25% {
-        transform: translateX(35vw) translateY(-8px) rotate(2deg);
-    }
-    60% {
-        transform: translateX(75vw) translateY(6px) rotate(-1deg);
-    }
-    100% {
-        transform: translateX(115vw) translateY(0) rotate(2deg);
-    }
-}
-
-@keyframes pulse {
-    0%,
-    100% {
-        opacity: 0.4;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1.3);
     }
 }
 

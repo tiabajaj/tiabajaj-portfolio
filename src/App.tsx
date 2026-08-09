@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 
 type Project = {
     title: string
@@ -14,6 +14,9 @@ const ROLE_PHRASES = [
     "ORBITAL SYSTEMS THINKER",
     "GUIDANCE & CONTROL",
 ]
+
+// Placeholder — swap in your real software list.
+const SOFTWARE_TOOLS = ["Python", "MATLAB", "SolidWorks", "Simulink", "ANSYS", "C++"]
 
 const MISSION_PROJECTS: Project[] = [
     {
@@ -45,6 +48,57 @@ const MISSION_PROJECTS: Project[] = [
         image: "https://framerusercontent.com/images/xQAKKE4Lp79vYYacuWjQUbkzyuA.png?width=1370&height=1294&kb=1215",
     },
 ]
+
+function Reveal({
+    children,
+    className = "",
+    delay = 0,
+}: {
+    children: ReactNode
+    className?: string
+    delay?: number
+}) {
+    const ref = useRef<HTMLDivElement>(null)
+    const [visible, setVisible] = useState(false)
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setVisible(true)
+                    observer.disconnect()
+                }
+            },
+            { threshold: 0.2, rootMargin: "0px 0px -60px 0px" }
+        )
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [])
+
+    return (
+        <div
+            ref={ref}
+            className={`reveal ${visible ? "reveal-visible" : ""} ${className}`}
+            style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
+        >
+            {children}
+        </div>
+    )
+}
+
+function Navbar() {
+    return (
+        <header className="nav">
+            <span className="nav-name">Tia Bajaj</span>
+            <button className="nav-menu" aria-label="Open menu" type="button">
+                <span />
+                <span />
+            </button>
+        </header>
+    )
+}
 
 function useReducedMotion() {
     const [reduced, setReduced] = useState(false)
@@ -90,73 +144,86 @@ export default function App() {
     )
 
     return (
-        <main className="page">
-            <section className="hero" aria-label="Intro">
-                <div className="starfield" aria-hidden="true" />
-                <div className={`drone-wrap ${reducedMotion ? "reduced" : ""}`} aria-hidden="true">
-                    <svg className="drone" viewBox="0 0 72 40">
-                        <ellipse cx="36" cy="20" rx="23" ry="9" className="drone-glow" />
-                        <line x1="18" y1="14" x2="54" y2="14" className="drone-line" />
-                        <line x1="18" y1="26" x2="54" y2="26" className="drone-line" />
-                        <rect x="28" y="14" width="16" height="12" rx="3" className="drone-body" />
-                        {[18, 54].map((x) => (
-                            <g key={`a${x}`}>
-                                <ellipse cx={x} cy="14" rx="6.5" ry="1.4" className="drone-prop" />
-                                <circle cx={x} cy="14" r="1.5" className="drone-pulse" />
-                            </g>
-                        ))}
-                        {[18, 54].map((x) => (
-                            <g key={`b${x}`}>
-                                <ellipse cx={x} cy="26" rx="6.5" ry="1.4" className="drone-prop" />
-                                <circle cx={x} cy="26" r="1.5" className="drone-pulse" />
-                            </g>
-                        ))}
-                    </svg>
-                </div>
+        <>
+            <Navbar />
+            <main className="page">
+                <section className="hero" aria-label="Intro">
+                    <div className="starfield" aria-hidden="true" />
 
-                <div className="hero-inner">
-                    <h1 className="hero-name">I’m Tia Bajaj</h1>
-                    <p className={`role-line ${reducedMotion ? "reduced" : ""}`}>{ROLE_PHRASES[roleIndex]}</p>
-                    <a href="mailto:tiabajaj@gmail.com" className="mission-button">
-                        Begin Mission Contact
-                    </a>
-                </div>
-            </section>
-
-            <section className="content">
-                <p className="philosophy">
-                    I build mission-ready systems where engineering precision meets human-centered design — from
-                    orbital architecture to software interfaces that support high-consequence decisions.
-                </p>
-
-                <div className="capabilities">
-                    <h2>Capabilities</h2>
-                    <ul>
-                        <li>Mission architecture and systems integration</li>
-                        <li>Guidance, controls, and orbital analysis workflows</li>
-                        <li>CAD-driven prototyping and aerospace software UI/UX</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section className="mission-work" aria-label="Mission work">
-                <h2>Mission Work</h2>
-                <div className="carousel-window" tabIndex={0} aria-label="Project carousel">
-                    <div className="carousel-track" style={{ transform: `translateX(${trackX}px)` }}>
-                        {MISSION_PROJECTS.map((project) => (
-                            <article className="mission-card" key={project.title}>
-                                <img src={project.image} alt={project.title} />
-                                <div className="card-overlay">
-                                    <h3>{project.title}</h3>
-                                    <p>{project.org}</p>
-                                    <p>{project.role}</p>
-                                    <p>{project.focus}</p>
-                                </div>
-                            </article>
-                        ))}
+                    <div className="hero-inner">
+                        <span className="hero-marker" aria-hidden="true" />
+                        <h1 className="hero-name">
+                            <span className="hero-name-lead">I’m </span>
+                            <span className="hero-name-emph">Tia Bajaj</span>
+                        </h1>
+                        <p className={`role-line ${reducedMotion ? "reduced" : ""}`}>{ROLE_PHRASES[roleIndex]}.</p>
+                        <a href="mailto:tiabajaj@gmail.com" className="mission-button">
+                            Mission contact
+                        </a>
                     </div>
-                </div>
-            </section>
-        </main>
+
+                    <div className="tools-marquee" aria-label="Software">
+                        <div className="tools-marquee-track">
+                            {[...SOFTWARE_TOOLS, ...SOFTWARE_TOOLS].map((tool, i) => (
+                                <span className="tools-marquee-item" key={`${tool}-${i}`}>
+                                    {tool}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
+                <section className="content">
+                    <Reveal>
+                        <p className="philosophy">
+                            I engineer elegant, resilient systems for the boundary between atmosphere and orbit.
+                        </p>
+                    </Reveal>
+                </section>
+
+                <section className="projects-intro" aria-label="Projects">
+                    <Reveal>
+                        <h2>Projects</h2>
+                        <p className="section-subtitle">Rigorous engineering for missions that need to endure.</p>
+                    </Reveal>
+                </section>
+
+                <section className="mission-work" aria-label="Mission work">
+                    <Reveal>
+                        <h2>Mission work</h2>
+                        <p className="section-subtitle">Selected aerospace missions, systems, and prototypes.</p>
+                    </Reveal>
+                    <Reveal delay={150}>
+                        <div className="carousel-window" tabIndex={0} aria-label="Project carousel">
+                            <div className="carousel-track" style={{ transform: `translateX(${trackX}px)` }}>
+                                {MISSION_PROJECTS.map((project) => (
+                                    <article className="mission-card" key={project.title}>
+                                        <img src={project.image} alt={project.title} />
+                                        <div className="card-overlay">
+                                            <p className="card-category">{project.org}</p>
+                                            <h3>{project.title}</h3>
+                                            <p className="card-role">{project.role}</p>
+                                            <p className="card-focus">{project.focus}</p>
+                                        </div>
+                                    </article>
+                                ))}
+                            </div>
+                        </div>
+                    </Reveal>
+                </section>
+
+                <section className="cta" aria-label="Contact">
+                    <Reveal className="cta-reveal">
+                        <span className="cta-sparkle" aria-hidden="true">
+                            ✦
+                        </span>
+                        <h2>Let’s build what moves beyond Earth.</h2>
+                        <a href="mailto:tiabajaj@gmail.com" className="mission-button">
+                            Start a conversation
+                        </a>
+                    </Reveal>
+                </section>
+            </main>
+        </>
     )
 }
